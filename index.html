@@ -1,360 +1,142 @@
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>BD JOB | Account</title>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BD JOB - Login</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-
-body{
- font-family:Arial,sans-serif;
- min-height:100vh;
- display:flex;
- align-items:center;
- justify-content:center;
- padding:20px;
- color:white;
- background:linear-gradient(135deg,#07152e,#123e83,#501a88);
-}
-
-.bg{
- position:fixed;
- width:250px;
- height:250px;
- border-radius:50%;
- filter:blur(100px);
- opacity:.4;
- background:#258bff;
- top:-70px;
- left:-70px;
-}
-
-.bg.two{
- background:#a855f7;
- top:auto;
- left:auto;
- bottom:-70px;
- right:-70px;
-}
-
-.container{
- width:100%;
- max-width:410px;
- position:relative;
- background:rgba(255,255,255,.10);
- backdrop-filter:blur(18px);
- border:1px solid #ffffff35;
- border-radius:24px;
- padding:30px 24px;
- box-shadow:0 20px 60px #0005;
-}
-
-.logo{
- text-align:center;
- font-size:36px;
- font-weight:900;
- letter-spacing:2px;
-}
-
-.logo span{color:#54b5ff}
-
-.tagline{
- text-align:center;
- color:#d1d5db;
- font-size:13px;
- margin:8px 0 25px;
-}
-
-.tabs{
- display:flex;
- background:#071a38;
- padding:5px;
- border-radius:12px;
- margin-bottom:25px;
-}
-
-.tabs button{
- width:50%;
- border:0;
- padding:13px;
- border-radius:9px;
- background:transparent;
- color:#cbd5e1;
- font-weight:bold;
-}
-
-.tabs button.active{
- background:linear-gradient(90deg,#1687ff,#7047ff);
- color:white;
-}
-
-h2{font-size:24px;margin-bottom:8px}
-
-.subtitle{
- color:#cbd5e1;
- font-size:13px;
- margin-bottom:22px;
-}
-
-.field{margin-bottom:16px}
-
-.field label{
- display:block;
- font-size:13px;
- margin-bottom:8px;
-}
-
-.input-box{
- display:flex;
- align-items:center;
- background:#071a38;
- border:1px solid #344c70;
- border-radius:11px;
- padding:0 13px;
-}
-
-.input-box:focus-within{border-color:#38a5ff}
-
-.input-box span{font-size:17px}
-
-.input-box input{
- width:100%;
- background:transparent;
- border:0;
- outline:0;
- color:white;
- padding:15px 10px;
- font-size:14px;
-}
-
-.input-box input::placeholder{color:#94a3b8}
-
-.eye{cursor:pointer}
-
-.main-btn{
- width:100%;
- padding:15px;
- border:0;
- border-radius:11px;
- background:linear-gradient(90deg,#1687ff,#7848ff);
- color:white;
- font-size:16px;
- font-weight:bold;
- cursor:pointer;
- margin-top:10px;
-}
-
-.main-btn:disabled{opacity:.6}
-
-.hidden{display:none}
-
-#msg{
- margin-top:15px;
- font-size:13px;
- text-align:center;
- overflow-wrap:anywhere;
-}
-
-.footer{
- text-align:center;
- color:#cbd5e1;
- font-size:12px;
- margin-top:25px;
-}
-
-.footer b{color:#55b5ff}
+  *{box-sizing:border-box;font-family:sans-serif}
+  body{margin:0;background:#0a1a4a;display:flex;justify-content:center;min-height:100vh;color:white}
+  .box{width:100%;max-width:420px;padding:20px}
+  .tabs{display:flex;background:#0f204f;border-radius:15px;padding:5px;margin-bottom:20px}
+  .tabs button{flex:1;padding:12px;border:none;border-radius:10px;font-weight:bold;cursor:pointer;background:transparent;color:#aaa}
+  .tabs button.active{background:linear-gradient(90deg,#2196f3,#9c27b0);color:white}
+  input{width:100%;padding:14px;border:none;border-radius:12px;background:#0a1a3a;color:white;margin:8px 0 15px;outline:none;font-size:16px}
+  .btn{width:100%;padding:15px;border:none;border-radius:12px;background:linear-gradient(90deg,#2196f3,#9c27b0);color:white;font-weight:bold;font-size:17px;cursor:pointer}
+  .btn:disabled{opacity:.6}
+  label{font-size:15px;color:#ddd}
+  #msg{text-align:center;margin-top:12px;font-size:14px;color:#ffcc80;min-height:20px}
 </style>
 </head>
-
 <body>
+<div class="box">
+  <p style="text-align:center;opacity:.8">Your Career, Your Future</p>
+  <div class="tabs">
+    <button id="tabReg" class="active" onclick="showTab('reg')">Register</button>
+    <button id="tabLog" onclick="showTab('login')">Login</button>
+  </div>
 
-<div class="bg"></div>
-<div class="bg two"></div>
+  <!-- REGISTER -->
+  <div id="regBox">
+    <h2>Create Account</h2>
+    <p style="opacity:.7">Create your BD JOB account.</p>
+    <label>Full Name</label>
+    <input id="regName" placeholder="Rakib" type="text">
+    <label>Mobile Number</label>
+    <input id="regMobile" placeholder="018XXXXXXXXX" type="tel">
+    <label>Password</label>
+    <input id="regPass" placeholder="••••••" type="password">
+    <label>Confirm Password</label>
+    <input id="regConfirm" placeholder="••••••" type="password">
+    <button class="btn" id="regBtn" onclick="registerUser()">CREATE ACCOUNT →</button>
+  </div>
 
-<div class="container">
+  <!-- LOGIN -->
+  <div id="loginBox" style="display:none">
+    <h2>Welcome Back</h2>
+    <p style="opacity:.7">Login to your BD JOB account.</p>
+    <label>Mobile Number</label>
+    <input id="loginMobile" placeholder="018XXXXXXXXX" type="tel">
+    <label>Password</label>
+    <input id="loginPass" placeholder="••••••" type="password">
+    <button class="btn" id="loginBtn" onclick="loginUser()">LOGIN →</button>
+  </div>
 
-<div class="logo">BD <span>JOB</span></div>
-<p class="tagline">Your Career, Your Future</p>
-
-<div class="tabs">
-<button id="regTab" class="active"
-onclick="showRegister()">Register</button>
-
-<button id="logTab"
-onclick="showLogin()">Login</button>
+  <p id="msg"></p>
+  <p style="text-align:center;opacity:.6;font-size:13px">© 2026 BD JOB | All Rights Reserved</p>
 </div>
 
-<div id="registerBox">
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-<h2>Create Account</h2>
-<p class="subtitle">Create your BD JOB account.</p>
+  // তোমার Firebase Config - স্ক্রিনশট থেকে নেওয়া
+  const firebaseConfig = {
+    apiKey: "AIzaSyArqUadtFapeb1lJGaU5aPHASkcvrKNTJc",
+    authDomain: "bd-job-85768.firebaseapp.com",
+    projectId: "bd-job-85768",
+    storageBucket: "bd-job-85768.firebasestorage.app",
+    messagingSenderId: "1028353082550",
+    appId: "1:1028353082550:web:827629bf347e2e49cd217"
+  };
 
-<div class="field">
-<label>Full Name</label>
-<div class="input-box">
-<span>👤</span>
-<input id="regName" placeholder="Enter your full name">
-</div>
-</div>
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
 
-<div class="field">
-<label>Mobile Number</label>
-<div class="input-box">
-<span>📱</span>
-<input id="regPhone" type="tel"
-inputmode="numeric" maxlength="11"
-placeholder="01XXXXXXXXX">
-</div>
-</div>
+  const msg = document.getElementById('msg');
+  function showMsg(t){ msg.innerText = t; }
 
-<div class="field">
-<label>Password</label>
-<div class="input-box">
-<span>🔒</span>
-<input id="regPassword" type="password"
-placeholder="Minimum 6 characters">
-<span class="eye"
-onclick="togglePass('regPassword',this)">👁</span>
-</div>
-</div>
+  window.showTab = function(type){
+    document.getElementById('regBox').style.display = type==='reg' ? 'block' : 'none';
+    document.getElementById('loginBox').style.display = type==='login' ? 'block' : 'none';
+    document.getElementById('tabReg').classList.toggle('active', type==='reg');
+    document.getElementById('tabLog').classList.toggle('active', type==='login');
+    showMsg('');
+  }
 
-<div class="field">
-<label>Confirm Password</label>
-<div class="input-box">
-<span>🔐</span>
-<input id="confirmPassword" type="password"
-placeholder="Confirm your password">
-</div>
-</div>
+  // REGISTER
+  window.registerUser = async function(){
+    const name = document.getElementById('regName').value.trim();
+    const mobile = document.getElementById('regMobile').value.trim();
+    const pass = document.getElementById('regPass').value;
+    const confirm = document.getElementById('regConfirm').value;
 
-<button class="main-btn" id="regButton"
-onclick="registerUser()">CREATE ACCOUNT →</button>
+    if(!name || !mobile || !pass) return showMsg('সব ঘর পূরণ করো!');
+    if(mobile.length !== 11) return showMsg('সঠিক ১১ সংখ্যার মোবাইল নম্বর দাও!');
+    if(pass !== confirm) return showMsg('পাসওয়ার্ড মিলছে না!');
+    if(pass.length < 6) return showMsg('পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে!');
 
-</div>
+    const fakeEmail = mobile + "@bdjob.com";
+    document.getElementById('regBtn').disabled = true;
+    showMsg('অ্যাকাউন্ট তৈরি হচ্ছে...');
 
-<div id="loginBox" class="hidden">
+    try{
+      const userCred = await createUserWithEmailAndPassword(auth, fakeEmail, pass);
+      await updateProfile(userCred.user, { displayName: name });
+      // Firestore এ নাম + মোবাইল সেভ করা
+      await setDoc(doc(db, "users", userCred.user.uid), {
+        name: name,
+        mobile: mobile,
+        createdAt: new Date().toISOString()
+      });
+      showMsg('✅ অ্যাকাউন্ট তৈরি হয়ে গেছে! এখন লগইন করো।');
+      setTimeout(()=> showTab('login'), 1000);
+    }catch(e){
+      if(e.code === 'auth/email-already-in-use') showMsg('এই নম্বর দিয়ে আগেই অ্যাকাউন্ট খোলা আছে, লগইন করো।');
+      else showMsg('Error: ' + e.message);
+    }
+    document.getElementById('regBtn').disabled = false;
+  }
 
-<h2>Welcome Back!</h2>
-<p class="subtitle">Login to your BD JOB account.</p>
+  // LOGIN
+  window.loginUser = async function(){
+    const mobile = document.getElementById('loginMobile').value.trim();
+    const pass = document.getElementById('loginPass').value;
+    if(!mobile || !pass) return showMsg('মোবাইল ও পাসওয়ার্ড দাও!');
 
-<div class="field">
-<label>Mobile Number</label>
-<div class="input-box">
-<span>📱</span>
-<input id="loginPhone" type="tel"
-inputmode="numeric" maxlength="11"
-placeholder="01XXXXXXXXX">
-</div>
-</div>
-
-<div class="field">
-<label>Password</label>
-<div class="input-box">
-<span>🔒</span>
-<input id="loginPassword" type="password"
-placeholder="Enter your password">
-<span class="eye"
-onclick="togglePass('loginPassword',this)">👁</span>
-</div>
-</div>
-
-<button class="main-btn" id="loginButton"
-onclick="loginUser()">LOGIN NOW →</button>
-
-</div>
-
-<p id="msg"></p>
-
-<div class="footer">
-© 2026 <b>BD JOB</b> | All Rights Reserved
-</div>
-
-</div>
-
-<script>
-const msg=document.getElementById("msg");
-
-function showRegister(){
- document.getElementById("registerBox").classList.remove("hidden");
- document.getElementById("loginBox").classList.add("hidden");
- document.getElementById("regTab").classList.add("active");
- document.getElementById("logTab").classList.remove("active");
- msg.innerText="";
-}
-
-function showLogin(){
- document.getElementById("loginBox").classList.remove("hidden");
- document.getElementById("registerBox").classList.add("hidden");
- document.getElementById("logTab").classList.add("active");
- document.getElementById("regTab").classList.remove("active");
- msg.innerText="";
-}
-
-function togglePass(id,eye){
- const input=document.getElementById(id);
- input.type=input.type==="password"?"text":"password";
- eye.innerText=input.type==="password"?"👁":"🙈";
-}
-
-/*
-Registration ও Login-এর জন্য নিরাপদ server API
-এখানে যুক্ত করতে হবে।
-API ছাড়া কোনো password বা account
-localStorage/Firestore-এ সংরক্ষণ করা হবে না।
-*/
-
-async function registerUser(){
-
- const name=document.getElementById("regName").value.trim();
- const phone=document.getElementById("regPhone").value.trim();
- const password=document.getElementById("regPassword").value;
- const confirm=document.getElementById("confirmPassword").value;
-
- if(!name||!phone||!password||!confirm){
-  msg.innerText="সব তথ্য পূরণ করুন";
-  return;
- }
-
- if(!/^01[3-9]\d{8}$/.test(phone)){
-  msg.innerText="সঠিক ১১ সংখ্যার বাংলাদেশি নম্বর দিন";
-  return;
- }
-
- if(password.length<6){
-  msg.innerText="পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে";
-  return;
- }
-
- if(password!==confirm){
-  msg.innerText="দুইটি পাসওয়ার্ড মিলছে না";
-  return;
- }
-
- msg.innerText="নিরাপদ Registration API এখনো সংযুক্ত করা হয়নি।";
-}
-
-async function loginUser(){
-
- const phone=document.getElementById("loginPhone").value.trim();
- const password=document.getElementById("loginPassword").value;
-
- if(!phone||!password){
-  msg.innerText="নাম্বার ও পাসওয়ার্ড দিন";
-  return;
- }
-
- if(!/^01[3-9]\d{8}$/.test(phone)){
-  msg.innerText="সঠিক মোবাইল নম্বর দিন";
-  return;
- }
-
- msg.innerText="নিরাপদ Login API এখনো সংযুক্ত করা হয়নি।";
-}
+    const fakeEmail = mobile + "@bdjob.com";
+    showMsg('লগইন হচ্ছে...');
+    try{
+      await signInWithEmailAndPassword(auth, fakeEmail, pass);
+      showMsg('✅ লগইন সফল! স্বাগতম।');
+      // লগইন হলে পরের পেজে যাবে
+      // window.location.href = "dashboard.html";
+    }catch(e){
+      showMsg('লগইন হয়নি! নম্বর বা পাসওয়ার্ড ভুল।');
+    }
+  }
 </script>
-
 </body>
-  </html>
-  
+</html>
