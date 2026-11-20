@@ -762,24 +762,23 @@ window.copyLink = copyLink;
 window.shareLink = shareLink;
 window.showToast = showToast;
 window.fallbackCopy = fallbackCopy;
-async function loadBalance() {
-  let uid = auth.currentUser ? auth.currentUser.uid : null;
-  if (!uid) {
-    try { uid = JSON.parse(localStorage.getItem('currentUser') || '{}').uid || localStorage.getItem('uid'); } catch(e){}
-  }
-  if (!uid) return;
-  const snap = await getDoc(doc(db, "users", uid));
-  if (snap.exists()) {
+async function loadBalance(){
+  const user = auth.currentUser;
+  if(!user) return;
+  const snap = await getDoc(doc(db, "users", user.uid));
+  if(snap.exists()){
     const data = snap.data();
     document.getElementById('balance').innerText = (data.balance || 0).toFixed(2) + "৳";
-    if (data.bonusClaimed) {
-      document.getElementById('bonusText').innerText = "নেওয়া হয়ে গেছে ✅";
+    if(data.bonusClaimed){
+      document.getElementById('bonusText').innerText = "বোনাস নেওয়া হয়ে গেছে ✅";
       document.getElementById('bonusSub').innerText = "আপনি বোনাস পেয়েছেন";
     }
   }
 }
-onAuthStateChanged(auth, loadBalance);
-setTimeout(loadBalance, 1000);
+
+onAuthStateChanged(auth, (user) => {
+  if(user) loadBalance();
+});
 </script>
 </body>
 </html>
