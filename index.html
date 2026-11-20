@@ -1,0 +1,360 @@
+
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>BD JOB | Account</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+ font-family:Arial,sans-serif;
+ min-height:100vh;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ padding:20px;
+ color:white;
+ background:linear-gradient(135deg,#07152e,#123e83,#501a88);
+}
+
+.bg{
+ position:fixed;
+ width:250px;
+ height:250px;
+ border-radius:50%;
+ filter:blur(100px);
+ opacity:.4;
+ background:#258bff;
+ top:-70px;
+ left:-70px;
+}
+
+.bg.two{
+ background:#a855f7;
+ top:auto;
+ left:auto;
+ bottom:-70px;
+ right:-70px;
+}
+
+.container{
+ width:100%;
+ max-width:410px;
+ position:relative;
+ background:rgba(255,255,255,.10);
+ backdrop-filter:blur(18px);
+ border:1px solid #ffffff35;
+ border-radius:24px;
+ padding:30px 24px;
+ box-shadow:0 20px 60px #0005;
+}
+
+.logo{
+ text-align:center;
+ font-size:36px;
+ font-weight:900;
+ letter-spacing:2px;
+}
+
+.logo span{color:#54b5ff}
+
+.tagline{
+ text-align:center;
+ color:#d1d5db;
+ font-size:13px;
+ margin:8px 0 25px;
+}
+
+.tabs{
+ display:flex;
+ background:#071a38;
+ padding:5px;
+ border-radius:12px;
+ margin-bottom:25px;
+}
+
+.tabs button{
+ width:50%;
+ border:0;
+ padding:13px;
+ border-radius:9px;
+ background:transparent;
+ color:#cbd5e1;
+ font-weight:bold;
+}
+
+.tabs button.active{
+ background:linear-gradient(90deg,#1687ff,#7047ff);
+ color:white;
+}
+
+h2{font-size:24px;margin-bottom:8px}
+
+.subtitle{
+ color:#cbd5e1;
+ font-size:13px;
+ margin-bottom:22px;
+}
+
+.field{margin-bottom:16px}
+
+.field label{
+ display:block;
+ font-size:13px;
+ margin-bottom:8px;
+}
+
+.input-box{
+ display:flex;
+ align-items:center;
+ background:#071a38;
+ border:1px solid #344c70;
+ border-radius:11px;
+ padding:0 13px;
+}
+
+.input-box:focus-within{border-color:#38a5ff}
+
+.input-box span{font-size:17px}
+
+.input-box input{
+ width:100%;
+ background:transparent;
+ border:0;
+ outline:0;
+ color:white;
+ padding:15px 10px;
+ font-size:14px;
+}
+
+.input-box input::placeholder{color:#94a3b8}
+
+.eye{cursor:pointer}
+
+.main-btn{
+ width:100%;
+ padding:15px;
+ border:0;
+ border-radius:11px;
+ background:linear-gradient(90deg,#1687ff,#7848ff);
+ color:white;
+ font-size:16px;
+ font-weight:bold;
+ cursor:pointer;
+ margin-top:10px;
+}
+
+.main-btn:disabled{opacity:.6}
+
+.hidden{display:none}
+
+#msg{
+ margin-top:15px;
+ font-size:13px;
+ text-align:center;
+ overflow-wrap:anywhere;
+}
+
+.footer{
+ text-align:center;
+ color:#cbd5e1;
+ font-size:12px;
+ margin-top:25px;
+}
+
+.footer b{color:#55b5ff}
+</style>
+</head>
+
+<body>
+
+<div class="bg"></div>
+<div class="bg two"></div>
+
+<div class="container">
+
+<div class="logo">BD <span>JOB</span></div>
+<p class="tagline">Your Career, Your Future</p>
+
+<div class="tabs">
+<button id="regTab" class="active"
+onclick="showRegister()">Register</button>
+
+<button id="logTab"
+onclick="showLogin()">Login</button>
+</div>
+
+<div id="registerBox">
+
+<h2>Create Account</h2>
+<p class="subtitle">Create your BD JOB account.</p>
+
+<div class="field">
+<label>Full Name</label>
+<div class="input-box">
+<span>👤</span>
+<input id="regName" placeholder="Enter your full name">
+</div>
+</div>
+
+<div class="field">
+<label>Mobile Number</label>
+<div class="input-box">
+<span>📱</span>
+<input id="regPhone" type="tel"
+inputmode="numeric" maxlength="11"
+placeholder="01XXXXXXXXX">
+</div>
+</div>
+
+<div class="field">
+<label>Password</label>
+<div class="input-box">
+<span>🔒</span>
+<input id="regPassword" type="password"
+placeholder="Minimum 6 characters">
+<span class="eye"
+onclick="togglePass('regPassword',this)">👁</span>
+</div>
+</div>
+
+<div class="field">
+<label>Confirm Password</label>
+<div class="input-box">
+<span>🔐</span>
+<input id="confirmPassword" type="password"
+placeholder="Confirm your password">
+</div>
+</div>
+
+<button class="main-btn" id="regButton"
+onclick="registerUser()">CREATE ACCOUNT →</button>
+
+</div>
+
+<div id="loginBox" class="hidden">
+
+<h2>Welcome Back!</h2>
+<p class="subtitle">Login to your BD JOB account.</p>
+
+<div class="field">
+<label>Mobile Number</label>
+<div class="input-box">
+<span>📱</span>
+<input id="loginPhone" type="tel"
+inputmode="numeric" maxlength="11"
+placeholder="01XXXXXXXXX">
+</div>
+</div>
+
+<div class="field">
+<label>Password</label>
+<div class="input-box">
+<span>🔒</span>
+<input id="loginPassword" type="password"
+placeholder="Enter your password">
+<span class="eye"
+onclick="togglePass('loginPassword',this)">👁</span>
+</div>
+</div>
+
+<button class="main-btn" id="loginButton"
+onclick="loginUser()">LOGIN NOW →</button>
+
+</div>
+
+<p id="msg"></p>
+
+<div class="footer">
+© 2026 <b>BD JOB</b> | All Rights Reserved
+</div>
+
+</div>
+
+<script>
+const msg=document.getElementById("msg");
+
+function showRegister(){
+ document.getElementById("registerBox").classList.remove("hidden");
+ document.getElementById("loginBox").classList.add("hidden");
+ document.getElementById("regTab").classList.add("active");
+ document.getElementById("logTab").classList.remove("active");
+ msg.innerText="";
+}
+
+function showLogin(){
+ document.getElementById("loginBox").classList.remove("hidden");
+ document.getElementById("registerBox").classList.add("hidden");
+ document.getElementById("logTab").classList.add("active");
+ document.getElementById("regTab").classList.remove("active");
+ msg.innerText="";
+}
+
+function togglePass(id,eye){
+ const input=document.getElementById(id);
+ input.type=input.type==="password"?"text":"password";
+ eye.innerText=input.type==="password"?"👁":"🙈";
+}
+
+/*
+Registration ও Login-এর জন্য নিরাপদ server API
+এখানে যুক্ত করতে হবে।
+API ছাড়া কোনো password বা account
+localStorage/Firestore-এ সংরক্ষণ করা হবে না।
+*/
+
+async function registerUser(){
+
+ const name=document.getElementById("regName").value.trim();
+ const phone=document.getElementById("regPhone").value.trim();
+ const password=document.getElementById("regPassword").value;
+ const confirm=document.getElementById("confirmPassword").value;
+
+ if(!name||!phone||!password||!confirm){
+  msg.innerText="সব তথ্য পূরণ করুন";
+  return;
+ }
+
+ if(!/^01[3-9]\d{8}$/.test(phone)){
+  msg.innerText="সঠিক ১১ সংখ্যার বাংলাদেশি নম্বর দিন";
+  return;
+ }
+
+ if(password.length<6){
+  msg.innerText="পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে";
+  return;
+ }
+
+ if(password!==confirm){
+  msg.innerText="দুইটি পাসওয়ার্ড মিলছে না";
+  return;
+ }
+
+ msg.innerText="নিরাপদ Registration API এখনো সংযুক্ত করা হয়নি।";
+}
+
+async function loginUser(){
+
+ const phone=document.getElementById("loginPhone").value.trim();
+ const password=document.getElementById("loginPassword").value;
+
+ if(!phone||!password){
+  msg.innerText="নাম্বার ও পাসওয়ার্ড দিন";
+  return;
+ }
+
+ if(!/^01[3-9]\d{8}$/.test(phone)){
+  msg.innerText="সঠিক মোবাইল নম্বর দিন";
+  return;
+ }
+
+ msg.innerText="নিরাপদ Login API এখনো সংযুক্ত করা হয়নি।";
+}
+</script>
+
+</body>
+  </html>
+  
