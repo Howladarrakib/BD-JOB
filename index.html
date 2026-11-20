@@ -131,8 +131,10 @@
     try{
       await signInWithEmailAndPassword(auth, fakeEmail, pass);
       showMsg('✅ লগইন সফল! স্বাগতম।');
-      // লগইন হলে পরের পেজে যাবে
-      // window.location.href = "dashboard.html";
+      showMsg('✅ লগইন সফল! Dashboard এ যাচ্ছে...');
+setTimeout(() => {
+  window.location.href = "./dashboard.html";
+}, 800);
     }catch(e){
       showMsg('লগইন হয়নি! নম্বর বা পাসওয়ার্ড ভুল।');
     }
