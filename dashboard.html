@@ -763,11 +763,13 @@ window.copyLink = copyLink;
 window.shareLink = shareLink;
 window.showToast = showToast;
 window.fallbackCopy = fallbackCopy;
-    // পেজ খুললেই ব্যালেন্স লোড হবে
-onAuthStateChanged(auth, async (user) => {
-  if (!user) return;
-  const userRef = doc(db, "users", user.uid);
-  const snap = await getDoc(userRef);
+async function loadBalance() {
+  let uid = auth.currentUser ? auth.currentUser.uid : null;
+  if (!uid) {
+    try { uid = JSON.parse(localStorage.getItem('currentUser') || '{}').uid || localStorage.getItem('uid'); } catch(e){}
+  }
+  if (!uid) return;
+  const snap = await getDoc(doc(db, "users", uid));
   if (snap.exists()) {
     const data = snap.data();
     document.getElementById('balance').innerText = (data.balance || 0).toFixed(2) + "৳";
@@ -776,7 +778,9 @@ onAuthStateChanged(auth, async (user) => {
       document.getElementById('bonusSub').innerText = "আপনি বোনাস পেয়েছেন";
     }
   }
-});
+}
+onAuthStateChanged(auth, loadBalance);
+setTimeout(loadBalance, 1000);
 </script>
 </body>
 </html>
