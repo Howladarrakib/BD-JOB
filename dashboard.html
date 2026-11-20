@@ -637,7 +637,7 @@ window.claimBonus = async function(){
   const data = snap.exists() ? snap.data() : {};
   if(data.bonusClaimed){ alert("আপনি আগেই বোনাস নিয়ে নিয়েছেন!"); return; }
   if(!confirm("আপনি কি ৫০০ টাকা বোনাস নিতে চান?")) return;
-  await updateDoc(userRef, { balance: increment(500), bonusClaimed: true });
+  await setDoc(userRef, { balance: increment(500), bonusClaimed: true }, { merge: true });
   let oldBal = data.balance || 0;
   document.getElementById('balance').innerText = (oldBal + 500).toFixed(2) + "৳";
   document.getElementById('bonusText').innerText = "নেওয়া হয়ে গেছে ✅";
