@@ -1,0 +1,617 @@
+
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BD JOB platform</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, "Noto Sans Bengali", sans-serif;
+}
+
+body {
+  background: #061638;
+  color: #fff;
+  padding-bottom: 95px;
+}
+
+.header {
+  background: linear-gradient(120deg,#001b65,#0751c9);
+  border-bottom: 4px solid #ffc900;
+  padding: 18px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 0 0 28px 28px;
+  position: relative;
+}
+
+.menu-btn, .bell {
+  border: none;
+  background: transparent;
+  color: white;
+  font-size: 27px;
+  cursor: pointer;
+}
+
+.brand {
+  text-align: center;
+  font-size: 27px;
+  font-weight: 900;
+}
+
+.brand span {
+  color: #ffdb00;
+}
+
+.brand small {
+  display: block;
+  font-size: 12px;
+  letter-spacing: 2px;
+}
+
+.menu-box {
+  display: none;
+  position: absolute;
+  top: 75px;
+  left: 12px;
+  background: white;
+  color: #071b49;
+  width: 190px;
+  border-radius: 12px;
+  z-index: 10;
+  box-shadow: 0 5px 20px #0008;
+  overflow: hidden;
+}
+
+.menu-box button {
+  width: 100%;
+  border: none;
+  background: white;
+  padding: 13px;
+  text-align: left;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.menu-box button:active {
+  background: #e5edff;
+}
+
+.container {
+  padding: 12px;
+}
+
+.balance-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 8px 0 15px;
+}
+
+.balance, .bonus {
+  border-radius: 20px;
+  padding: 18px 10px;
+  text-align: center;
+  min-height: 115px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.balance {
+  background: #fff;
+  color: #061b54;
+  border: 3px solid #ffcf00;
+}
+
+.bonus {
+  background: linear-gradient(130deg,#ffdf00,#ff9d00);
+  color: #8b1200;
+  border: 3px solid white;
+}
+
+.balance h3, .bonus h3 {
+  font-size: 14px;
+}
+
+.balance h1, .bonus h1 {
+  font-size: 27px;
+  margin-top: 8px;
+}
+
+.verify {
+  background: linear-gradient(110deg,#ffdc28,#fff1a6);
+  color: #061b54;
+  border: 3px solid #ffbf00;
+  padding: 18px 12px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 18px;
+  cursor: pointer;
+}
+
+.verify h2 {
+  font-size: 20px;
+}
+
+.verify h2 span {
+  color: #e51c17;
+  display: block;
+  font-size: 24px;
+}
+
+.verify p {
+  font-size: 12px;
+  margin-top: 7px;
+}
+
+.verify button {
+  border: none;
+  border-radius: 30px;
+  background: #e91616;
+  color: white;
+  padding: 12px 10px;
+  font-weight: bold;
+  cursor: pointer;
+  min-width: 105px;
+}
+
+.section-title {
+  font-size: 19px;
+  margin: 15px 3px;
+  color: #ffdc00;
+}
+
+.jobs {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 10px;
+}
+
+.job {
+  background: linear-gradient(145deg,#fff,#e4eaff);
+  color: #071944;
+  border-radius: 19px;
+  min-height: 145px;
+  padding: 12px 5px;
+  text-align: center;
+  border: 2px solid white;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.job:active {
+  transform: scale(.95);
+}
+
+.job .emoji {
+  font-size: 37px;
+  margin-bottom: 8px;
+}
+
+.job h3 {
+  font-size: 15px;
+  margin-bottom: 6px;
+}
+
+.job p {
+  font-size: 11px;
+  color: #343b66;
+  line-height: 1.5;
+}
+
+.job .arrow {
+  display: inline-block;
+  background: #0759db;
+  color: white;
+  border-radius: 50%;
+  padding: 4px 9px;
+  margin-top: 7px;
+}
+
+.team {
+  background: linear-gradient(120deg,#7000d5,#b300ff,#5700ae);
+  border: 3px solid #ffda00;
+  border-radius: 22px;
+  padding: 18px 10px;
+  margin: 20px 0;
+  text-align: center;
+  cursor: pointer;
+}
+
+.team h2 {
+  font-size: 22px;
+}
+
+.team p {
+  font-size: 15px;
+  margin-top: 8px;
+}
+
+.team strong {
+  color: #ffdf00;
+  font-size: 29px;
+}
+
+.referral {
+  background: #fff5d9;
+  color: #061b54;
+  border: 3px solid #ffcb00;
+  border-radius: 20px;
+  padding: 18px 10px;
+  text-align: center;
+}
+
+.referral h3 {
+  background: #ffca00;
+  display: inline-block;
+  padding: 8px 22px;
+  border-radius: 30px;
+  margin-top: -30px;
+  margin-bottom: 15px;
+}
+
+.ref-link {
+  background: white;
+  border: 2px solid #bdcaff;
+  border-radius: 30px;
+  padding: 12px 8px;
+  font-size: 11px;
+  overflow-wrap: anywhere;
+  margin-bottom: 12px;
+}
+
+.referral button {
+  border: none;
+  background: #0879e8;
+  color: white;
+  border-radius: 30px;
+  padding: 13px 20px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 4px;
+}
+
+.referral .share {
+  background: #00a944;
+}
+
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(120deg,#061638,#001e62);
+  border-top: 3px solid #0876ff;
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  padding: 12px 2px;
+  z-index: 20;
+}
+
+.nav-item {
+  background: transparent;
+  color: white;
+  border: none;
+  text-align: center;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.nav-item .nav-icon {
+  display: block;
+  font-size: 25px;
+  margin-bottom: 5px;
+}
+
+.nav-item.active {
+  color: #ffdc00;
+}
+
+.toast {
+  position: fixed;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #00a84f;
+  color: white;
+  padding: 12px 18px;
+  border-radius: 30px;
+  display: none;
+  z-index: 50;
+  font-size: 14px;
+  width: max-content;
+  max-width: 90%;
+}
+
+@media(max-width:360px) {
+  .brand {font-size: 22px;}
+  .job h3 {font-size: 13px;}
+  .job p {font-size: 10px;}
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+
+  <button class="menu-btn" onclick="toggleMenu()">☰</button>
+
+  <div class="brand">
+    BD <span>JOB</span> platform
+    <small>Work • Learn • Earn</small>
+  </div>
+
+  <button class="bell" onclick="notifyUser()">🔔</button>
+
+  <div class="menu-box" id="menuBox">
+    <button onclick="go('profile.html')">👤 My Profile</button>
+    <button onclick="go('verification.html')">🛡️ Verification</button>
+    <button onclick="go('history.html')">📋 History</button>
+    <button onclick="go('withdraw.html')">💰 Withdraw</button>
+    <button onclick="go('settings.html')">⚙️ Settings</button>
+    <button onclick="go('login.html')">🚪 Logout</button>
+  </div>
+
+</header>
+
+<div class="container">
+
+  <!-- Balance and Bonus -->
+
+  <div class="balance-row">
+
+    <div class="balance" onclick="go('income.html')">
+      <h3>💰 বর্তমান ব্যালেন্স</h3>
+      <h1 id="balance">0.00৳</h1>
+    </div>
+
+    <div class="bonus" onclick="showToast('রেজিস্ট্রেশন বোনাসের বিস্তারিত দেখুন')">
+      <h3>🎁 রেজিস্ট্রেশন বোনাস</h3>
+      <h1>500 টাকা</h1>
+    </div>
+
+  </div>
+
+  <!-- Verification -->
+
+  <div class="verify" onclick="go('verification.html')">
+
+    <div>
+      <h2>আপনার একাউন্ট</h2>
+      <h2><span>ভেরিফাই করুন</span></h2>
+      <p>ভেরিফাই না করলে ইনকাম সীমিত থাকবে!</p>
+    </div>
+
+    <button onclick="event.stopPropagation();go('verification.html')">
+      এখনই ভেরিফাই করুন
+    </button>
+
+  </div>
+
+  <!-- Earning options -->
+
+  <h2 class="section-title">💼 ইনকাম করার অপশন</h2>
+
+  <div class="jobs">
+
+    <div class="job" onclick="go('ads.html')">
+      <div class="emoji">📺</div>
+      <h3>এডস দেখা</h3>
+      <p>বিজ্ঞাপন দেখুন,<br>ইনকাম করুন</p>
+      <span class="arrow">›</span>
+    </div>
+
+    <div class="job" onclick="go('typing.html')">
+      <div class="emoji">⌨️</div>
+      <h3>টাইপিং জব</h3>
+      <p>টাইপ করে<br>আয় করুন</p>
+      <span class="arrow">›</span>
+    </div>
+
+    <div class="job" onclick="go('video.html')">
+      <div class="emoji">▶️</div>
+      <h3>ভিডিও দেখে ইনকাম</h3>
+      <p>ভিডিও দেখুন,<br>টাকা নিন</p>
+      <span class="arrow">›</span>
+    </div>
+
+    <div class="job" onclick="go('form.html')">
+      <div class="emoji">📝</div>
+      <h3>ফর্ম পূরণ</h3>
+      <p>ফর্ম পূরণ করে<br>ইনকাম করুন</p>
+      <span class="arrow">›</span>
+    </div>
+
+    <div class="job" onclick="go('plan.html')">
+      <div class="emoji">👑</div>
+      <h3>প্লান</h3>
+      <p>স্পেশাল প্লান<br>দেখুন</p>
+      <span class="arrow">›</span>
+    </div>
+
+    <div class="job" onclick="go('tax.html')">
+      <div class="emoji">📑</div>
+      <h3>ট্যাক্স এর কাজ</h3>
+      <p>ট্যাক্স সংক্রান্ত<br>কাজ করুন</p>
+      <span class="arrow">›</span>
+    </div>
+
+  </div>
+
+  <!-- Team -->
+
+  <div class="team" onclick="go('network.html')">
+
+    <h2>👥 টিম গঠন করে ইনকাম</h2>
+
+    <p>এক জন কে শেয়ার করলে</p>
+
+    <strong>300 টাকা</strong>
+
+    <p>রেফারেল সম্পর্কে বিস্তারিত জানতে ক্লিক করুন</p>
+
+  </div>
+
+  <!-- Referral -->
+
+  <div class="referral">
+
+    <h3>আপনার রেফার কোড</h3>
+
+    <div class="ref-link" id="refLink">
+      https://howladarrakib.github.io/BD-JOB/?utm_source=chatgpt.com
+    </div>
+
+    <button onclick="copyLink()">📋 লিংক কপি করুন</button>
+
+    <button class="share" onclick="shareLink()">
+      🔗 লিংক শেয়ার করুন
+    </button>
+
+    <p style="margin-top:12px;font-size:13px;">
+      🎁 বন্ধুদের সাথে শেয়ার করুন
+    </p>
+
+  </div>
+
+</div>
+
+<!-- Bottom Navigation -->
+
+<nav class="bottom-nav">
+
+  <button class="nav-item active" onclick="nav(this,'dashboard.html')">
+    <span class="nav-icon">🏠</span>
+    হোম
+  </button>
+
+  <button class="nav-item" onclick="nav(this,'offer.html')">
+    <span class="nav-icon">🎁</span>
+    অফার
+  </button>
+
+  <button class="nav-item" onclick="nav(this,'network.html')">
+    <span class="nav-icon">👥</span>
+    আমার নেটওয়ার্ক
+  </button>
+
+  <button class="nav-item" onclick="nav(this,'income.html')">
+    <span class="nav-icon">💳</span>
+    আয়
+  </button>
+
+</nav>
+
+<div class="toast" id="toast"></div>
+
+<script>
+
+// Page navigation
+
+function go(page) {
+  window.location.href = page;
+}
+
+// Bottom navigation
+
+function nav(button,page) {
+  document.querySelectorAll('.nav-item').forEach(item => {
+    item.classList.remove('active');
+  });
+
+  button.classList.add('active');
+  window.location.href = page;
+}
+
+// Three dot menu
+
+function toggleMenu() {
+  const menu = document.getElementById('menuBox');
+
+  menu.style.display =
+    menu.style.display === 'block' ? 'none' : 'block';
+}
+
+// Notification
+
+function notifyUser() {
+  showToast('🔔 নতুন নোটিফিকেশন নেই');
+}
+
+// Toast message
+
+function showToast(message) {
+  const toast = document.getElementById('toast');
+
+  toast.innerText = message;
+  toast.style.display = 'block';
+
+  setTimeout(() => {
+    toast.style.display = 'none';
+  },2500);
+}
+
+// Copy referral link
+
+function copyLink() {
+  const link = document.getElementById('refLink').innerText;
+
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(link)
+      .then(() => showToast('✅ লিংক কপি হয়েছে'))
+      .catch(() => fallbackCopy(link));
+  } else {
+    fallbackCopy(link);
+  }
+}
+
+function fallbackCopy(link) {
+  const input = document.createElement('textarea');
+  input.value = link;
+  document.body.appendChild(input);
+  input.select();
+
+  try {
+    document.execCommand('copy');
+    showToast('✅ লিংক কপি হয়েছে');
+  } catch(e) {
+    showToast('লিংক কপি করা যায়নি');
+  }
+
+  input.remove();
+}
+
+// Share referral link
+
+function shareLink() {
+  const link = document.getElementById('refLink').innerText;
+
+  if (navigator.share) {
+    navigator.share({
+      title: 'BD JOB platform',
+      text: 'BD JOB platform এ যুক্ত হন।',
+      url: link
+    }).catch(() => {});
+  } else {
+    copyLink();
+    showToast('লিংক কপি করে বন্ধুদের পাঠান');
+  }
+}
+
+</script>
+
+</body>
+</html>
