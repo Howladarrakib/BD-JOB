@@ -378,9 +378,10 @@ body {
       <h1 id="balance">0.00৳</h1>
     </div>
 
-    <div class="bonus" onclick="showToast('রেজিস্ট্রেশন বোনাসের বিস্তারিত দেখুন')">
-      <h3>🎁 রেজিস্ট্রেশন বোনাস</h3>
-      <h1>500 টাকা</h1>
+    <div class="bonus" id="bonusCard" onclick="claimBonus()">
+  <h3>🎁 রেজিস্ট্রেশন বোনাস</h3>
+  <h1 id="bonusText">500 টাকা</h1>
+  <small id="bonusSub">টিপ দিয়ে নিন</small>
     </div>
 
   </div>
@@ -517,8 +518,23 @@ body {
 
 <div class="toast" id="toast"></div>
 
-<script>
+<script type="module">
+  
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, getDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+const firebaseConfig = {
+  apiKey: "AIzaSyArqUadtFApeblIJGaU5aPHASkcvrKNTJc",
+  authDomain: "bd-job-85768.firebaseapp.com",
+  projectId: "bd-job-85768",
+  storageBucket: "bd-job-85768.firebasestorage.app",
+  messagingSenderId: "1028353082550",
+  appId: "1:1028353082550:web:827629bf347e2e409cd217"
+};
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 // Page navigation
 
 function go(page) {
@@ -610,7 +626,22 @@ function shareLink() {
     showToast('লিংক কপি করে বন্ধুদের পাঠান');
   }
 }
-
+// === ৫০০ টাকা বোনাস ===
+window.claimBonus = async function(){
+  const user = auth.currentUser;
+  if(!user){ alert("আগে লগইন করো"); return; }
+  const userRef = doc(db, "users", user.uid);
+  const snap = await getDoc(userRef);
+  const data = snap.data() || {};
+  if(data.bonusClaimed){ alert("আপনি আগেই বোনাস নিয়ে নিয়েছেন!"); return; }
+  if(!confirm("আপনি কি ৫০০ টাকা বোনাস নিতে চান?")) return;
+  await updateDoc(userRef, { balance: increment(500), bonusClaimed: true });
+  let oldBal = data.balance || 0;
+  document.getElementById('balance').innerText = (oldBal + 500).toFixed(2) + "৳";
+  document.getElementById('bonusText').innerText = "নেওয়া হয়ে গেছে ✅";
+  document.getElementById('bonusSub').innerText = "আপনি বোনাস পেয়েছেন";
+  alert("অভিনন্দন! 🎉 আপনার একাউন্টে ৫০০ টাকা যোগ হয়ে গেছে!");
+      }
 </script>
 
 </body>
