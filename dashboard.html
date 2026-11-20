@@ -628,11 +628,14 @@ function shareLink() {
 }
 // === ৫০০ টাকা বোনাস ===
 window.claimBonus = async function(){
-  const user = auth.currentUser;
-  if(!user){ alert("আগে লগইন করো"); return; }
-  const userRef = doc(db, "users", user.uid);
+  let uid = auth.currentUser ? auth.currentUser.uid : null;
+  if(!uid){
+    try{ uid = JSON.parse(localStorage.getItem('currentUser') || '{}').uid || localStorage.getItem('uid'); }catch(e){}
+  }
+  if(!uid){ alert("আগে লগইন করো"); return; }
+  const userRef = doc(db, "users", uid);
   const snap = await getDoc(userRef);
-  const data = snap.data() || {};
+  const data = snap.exists() ? snap.data() : {};
   if(data.bonusClaimed){ alert("আপনি আগেই বোনাস নিয়ে নিয়েছেন!"); return; }
   if(!confirm("আপনি কি ৫০০ টাকা বোনাস নিতে চান?")) return;
   await updateDoc(userRef, { balance: increment(500), bonusClaimed: true });
@@ -641,8 +644,16 @@ window.claimBonus = async function(){
   document.getElementById('bonusText').innerText = "নেওয়া হয়ে গেছে ✅";
   document.getElementById('bonusSub').innerText = "আপনি বোনাস পেয়েছেন";
   alert("অভিনন্দন! 🎉 আপনার একাউন্টে ৫০০ টাকা যোগ হয়ে গেছে!");
-      }
+// === সব বাটনকে আবার চালু করা ===
+window.go = go;
+window.toggleMenu = toggleMenu;
+window.toggleTask = toggleTask;
+window.toggleNotif = toggleNotif;
+window.notifyUser = notifyUser;
+window.copyLink = copyLink;
+window.shareLink = shareLink;
+window.showToast = showToast;
+window.fallbackCopy = fallbackCopy;
 </script>
-
 </body>
 </html>
