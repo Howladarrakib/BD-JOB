@@ -109,6 +109,8 @@
       await setDoc(doc(db, "users", userCred.user.uid), {
         name: name,
         mobile: mobile,
+       balance: 0,
+bonusClaimed: false,
         createdAt: new Date().toISOString()
       });
       showMsg('✅ অ্যাকাউন্ট তৈরি হয়ে গেছে! এখন লগইন করো।');
