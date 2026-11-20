@@ -611,7 +611,10 @@ body {
   <script type="module">
   
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {
+  getAuth,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import {
   getFirestore,
   doc,
@@ -762,22 +765,47 @@ window.copyLink = copyLink;
 window.shareLink = shareLink;
 window.showToast = showToast;
 window.fallbackCopy = fallbackCopy;
-async function loadBalance(){
-  const user = auth.currentUser;
-  if(!user) return;
-  const snap = await getDoc(doc(db, "users", user.uid));
-  if(snap.exists()){
-    const data = snap.data();
-    document.getElementById('balance').innerText = (data.balance || 0).toFixed(2) + "৳";
-    if(data.bonusClaimed){
-      document.getElementById('bonusText').innerText = "বোনাস নেওয়া হয়ে গেছে ✅";
-      document.getElementById('bonusSub').innerText = "আপনি বোনাস পেয়েছেন";
+async function loadBalance(user) {
+  const balanceEl = document.getElementById('balance');
+
+  balanceEl.innerText = 'লোড হচ্ছে...';
+
+  try {
+    const userRef = doc(db, "users", user.uid);
+    const snap = await getDoc(userRef);
+
+    if (snap.exists()) {
+      const data = snap.data();
+
+      const balance = Number(data.balance ?? 0);
+
+      balanceEl.innerText =
+        balance.toFixed(2) + "৳";
+
+      if (data.bonusClaimed) {
+        document.getElementById('bonusText').innerText =
+          "বোনাস নেওয়া হয়ে গেছে ✅";
+
+        document.getElementById('bonusSub').innerText =
+          "আপনি বোনাস পেয়েছেন";
+      }
+    } else {
+      balanceEl.innerText = "0.00৳";
     }
+
+  } catch (error) {
+    console.error("Balance Load Error:", error);
+    balanceEl.innerText = "লোড হয়নি";
   }
 }
 
 onAuthStateChanged(auth, (user) => {
-  if(user) loadBalance();
+  if (user) {
+    loadBalance(user);
+  } else {
+    document.getElementById('balance').innerText =
+      "লগইন করুন";
+  }
 });
 </script>
 </body>
