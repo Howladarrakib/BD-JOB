@@ -738,21 +738,20 @@ function shareLink() {
 // === ৫০০ টাকা বোনাস ===
 window.claimBonus = async function(){
   let uid = auth.currentUser ? auth.currentUser.uid : null;
-  if(!uid){
-    try{ uid = JSON.parse(localStorage.getItem('currentUser') || '{}').uid || localStorage.getItem('uid'); }catch(e){}
-  }
-  if(!uid){ alert("আগে লগইন করো"); return; }
+  if(!uid) return alert("আগে লগইন করো");
   const userRef = doc(db, "users", uid);
   const snap = await getDoc(userRef);
   const data = snap.exists() ? snap.data() : {};
-  if(data.bonusClaimed){ alert("আপনি আগেই বোনাস নিয়ে নিয়েছেন!"); return; }
-  if(!confirm("আপনি কি ৫০০ টাকা বোনাস নিতে চান?")) return;
-  await setDoc(userRef, { balance: increment(500), bonusClaimed: true }, { merge: true });
-  let oldBal = data.balance || 0;
-  document.getElementById('balance').innerText = (oldBal + 500).toFixed(2) + "৳";
-  document.getElementById('bonusText').innerText = "নেওয়া হয়ে গেছে ✅";
+  if(data.bonusClaimed) return alert("বোনাস আগেই নেওয়া হয়ে গেছে!");
+  if(!confirm("তুমি কি ৫০০ টাকা বোনাস নিতে চাও?")) return;
+
+  const newBal = (data.balance || 0) + 500;
+  await setDoc(userRef, { balance: newBal, bonusClaimed: true }, { merge: true });
+
+  document.getElementById('balance').innerText = newBal.toFixed(2) + "৳";
+  document.getElementById('bonusText').innerText = "বোনাস নেওয়া হয়ে গেছে ✅";
   document.getElementById('bonusSub').innerText = "আপনি বোনাস পেয়েছেন";
-  alert("অভিনন্দন! 🎉 আপনার একাউন্টে ৫০০ টাকা যোগ হয়ে গেছে!");
+  alert("অভিনন্দন 🎉 আপনার একাউন্টে ৫০০ টাকা যোগ হয়ে গেছে!");
 }
 // === সব বাটনকে আবার চালু করা ===
 window.go = go;
