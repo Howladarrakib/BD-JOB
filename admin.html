@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel - BD JOB</title>
+<style>
+  *{box-sizing:border-box}
+  body{font-family:system-ui; background:#f1f5f9; margin:0; padding:15px;}
+  h1{text-align:center; font-size:22px;}
+  .stats{display:flex; gap:10px; margin:15px 0;}
+  .card{flex:1; background:#fff; padding:15px; border-radius:12px; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,0.08);}
+  .card b{font-size:22px; display:block;}
+  .card span{font-size:12px; color:#64748b;}
+  .tabs{display:flex; gap:8px; margin-bottom:10px;}
+  .tabs button{flex:1; padding:11px; border:none; border-radius:10px; font-weight:bold; background:#e2e8f0;}
+  .tabs button.active{background:#0f172a; color:#fff;}
+  .user{background:#fff; padding:14px; border-radius:12px; margin-bottom:10px; box-shadow:0 2px 8px rgba(0,0,0,0.06);}
+  .user b{font-size:16px;}
+  .user p{font-size:13px; color:#475569; margin:5px 0; line-height:1.6; word-break:break-all;}
+  .btns{display:flex; gap:8px; margin-top:10px;}
+  .btns button{flex:1; padding:11px; border:none; border-radius:10px; font-weight:bold; color:#fff; font-size:14px;}
+  .approve{background:#16a34a;}
+  .reject{background:#dc2626;}
+  .msg{text-align:center; color:#64748b; font-size:14px; padding:20px;}
+  #loginBox{background:#fff; max-width:400px; margin:60px auto; padding:20px; border-radius:16px; text-align:center;}
+  #loginBox input{width:100%; padding:12px; border:1px solid #ddd; border-radius:10px; margin:8px 0;}
+  #loginBox button{width:100%; padding:12px; background:#0f172a; color:#fff; border:none; border-radius:10px; font-weight:bold;}
+</style>
+</head>
+<body>
+
+<div id="loginBox">
+  <h2>🔐 Admin Login</h2>
+  <p style="font-size:13px; color:#64748b;">শুধু তোমার ইমেইল দিয়ে ঢুকতে পারবা</p>
+  <input id="adminEmail" type="email" placeholder="Admin Email">
+  <input id="adminPass" type="password" placeholder="Password">
+  <button onclick="adminLogin()">Login</button>
+  <p id="loginMsg" style="font-size:13px; color:red;"></p>
+</div>
+
+<div id="mainBox" style="display:none;">
+  <h1>👑 BD JOB - Admin Panel</h1>
+  <div class="stats">
+    <div class="card"><b id="totalUsers">0</b><span>মোট ইউজার</span></div>
+    <div class="card"><b id="pendingCount">0</b><span>Pending ভেরিফাই</span></div>
+    <div class="card"><b id="verifiedCount">0</b><span>Verified</span></div>
+  </div>
+  <div class="tabs">
+    <button id="tabPending" class="active" onclick="showTab('pending')">Pending</button>
+    <button id="tabVerified" onclick="showTab('approved')">Verified</button>
+    <button id="tabAll" onclick="showTab('all')">All Users</button>
+  </div>
+  <div id="userList"></div>
+</div>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
+import { getFirestore, collection, query, where, getDocs, doc, getDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+
+// ===== তোমার আসল Config - বসানো হয়ে গেছে =====
+const firebaseConfig = {
+  apiKey: "AIzaSyArqUadtFApeblIJGaU5aPHASkcvrKNTJc",
+  authDomain: "bd-job-85768.firebaseapp.com",
+  projectId: "bd-job-85768",
+  storageBucket: "bd-job-85768.firebasestorage.app",
+  messagingSenderId: "1028353082550",
+  appId: "1:1028353082550:web:827629bf347e2e409cd217"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+setPersistence(auth, browserLocalPersistence);
+
+// ===== এখানে শুধু তোমার জিমেইলটা বসাও =====
+const ADMIN_EMAIL = "YOUR_ADMIN_EMAIL@gmail.com";
+
+let currentTab = 'pending';
+let allUsers = [];
+
+window.adminLogin = async function(){
+  const email = document.getElementById('adminEmail').value.trim();
+  const pass = document.getElementById('adminPass').value.trim();
+  if(!email || !pass){ alert("ইমেইল + পাসওয়ার্ড দাও"); return; }
+  try{
+    await signInWithEmailAndPassword(auth, email, pass);
+  }catch(e){ document.getElementById('loginMsg').innerText = "ভুল ইমেইল / পাসওয়ার্ড: " + e.message; }
+}
+
+onAuthStateChanged(auth, async (user)=>{
+  if(!user) return;
+  if(user.email !== ADMIN_EMAIL){
+    alert("তুমি এডমিন না! এই ইমেইল: " + user.email);
+    return;
+  }
+  document.getElementById('loginBox').style.display = 'none';
+  document.getElementById('mainBox').style.display = 'block';
+  loadUsers();
+});
+
+async function loadUsers(){
+  const snap = await getDocs(collection(db, "users"));
+  allUsers = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  document.getElementById('totalUsers').innerText = allUsers.length;
+  document.getElementById('pendingCount').innerText = allUsers.filter(u => u.verifyStatus === "pending").length;
+  document.getElementById('verifiedCount').innerText = allUsers.filter(u => u.verifyStatus === "approved").length;
+  renderList();
+}
+
+window.showTab = function(tab){
+  currentTab = tab;
+  document.getElementById('tabPending').classList.remove('active');
+  document.getElementById('tabVerified').classList.remove('active');
+  document.getElementById('tabAll').classList.remove('active');
+  if(tab === 'pending') document.getElementById('tabPending').classList.add('active');
+  if(tab === 'approved') document.getElementById('tabVerified').classList.add('active');
+  if(tab === 'all') document.getElementById('tabAll').classList.add('active');
+  renderList();
+}
+
+function renderList(){
+  let list = allUsers;
+  if(currentTab === 'pending') list = allUsers.filter(u => u.verifyStatus === "pending");
+  if(currentTab === 'approved') list = allUsers.filter(u => u.verifyStatus === "approved");
+  const box = document.getElementById('userList');
+  if(list.length === 0){ box.innerHTML = '<div class="msg">কেউ নেই</div>'; return; }
+  box.innerHTML = list.map(u => `
+    <div class="user">
+      <b>${u.verifyName || u.name || 'নাম নাই'} ${u.verifyStatus === 'approved' ? '✅' : ''}</b>
+      <p>
+        <b>নাম্বার:</b> ${u.verifySenderNumber || '---'}<br>
+        <b>TrxID:</b> ${u.verifyTrxId || '---'}<br>
+        <b>UID:</b> ${u.id}<br>
+        <b>রেফার করেছে:</b> ${u.referredBy || 'কেউ না - সরাসরি'}<br>
+        <b>নিজের কোড:</b> ${u.myReferCode || '---'} | <b>ব্যালেন্স:</b> ${u.balance || 0}৳ | <b>রেফার:</b> ${u.totalReferrals || 0} জন
+      </p>
+      ${u.verifyStatus === 'pending' ? `
+        <div class="btns">
+          <button class="approve" onclick="approveVerify('${u.id}')">✅ Approve + ১০০৳ রেফার বোনাস</button>
+          <button class="reject" onclick="rejectVerify('${u.id}')">❌ Reject</button>
+        </div>
+      ` : ''}
+    </div>
+  `).join('');
+}
+
+window.approveVerify = async function(userId){
+  if(!confirm("Approve করবা? রেফারকারী ১০০ টাকা পাবে।")) return;
+  const userRef = doc(db, "users", userId);
+  const snap = await getDoc(userRef);
+  const data = snap.data();
+  await updateDoc(userRef, { verifyStatus: "approved", isVerified: true });
+  if(data.referredBy){
+    const q = query(collection(db, "users"), where("myReferCode", "==", data.referredBy));
+    const qs = await getDocs(q);
+    if(!qs.empty){
+      const refDoc = qs.docs[0];
+      await updateDoc(doc(db, "users", refDoc.id), {
+        balance: increment(100),
+        totalReferrals: increment(1),
+        referralEarning: increment(100)
+      });
+      alert("✅ Approve হয়ে গেছে! রেফারকারীকে ১০০ টাকা দেওয়া হয়েছে।");
+    } else { alert("✅ Approve হয়ে গেছে! রেফারকারী পাওয়া যায় নাই।"); }
+  } else { alert("✅ Approve হয়ে গেছে!"); }
+  loadUsers();
+}
+
+window.rejectVerify = async function(userId){
+  if(!confirm("Reject করবা?")) return;
+  await updateDoc(doc(db, "users", userId), { verifyStatus: "rejected" });
+  alert("Reject করা হয়েছে");
+  loadUsers();
+}
+</script>
+</body>
+</html>
