@@ -32,8 +32,8 @@
 
 <div id="loginBox">
   <h2>🔐 Admin Login</h2>
-  <p style="font-size:13px; color:#64748b;">শুধু তোমার ইমেইল দিয়ে ঢুকতে পারবা</p>
-  <input id="adminEmail" type="email" placeholder="Admin Email">
+  <p style="font-size:13px; color:#64748b;">ফোন নাম্বার + পাসওয়ার্ড দিয়ে ঢুকো</p>
+  <input id="adminPhone" type="tel" placeholder="01XXXXXXXXX">
   <input id="adminPass" type="password" placeholder="Password">
   <button onclick="adminLogin()">Login</button>
   <p id="loginMsg" style="font-size:13px; color:red;"></p>
@@ -57,9 +57,8 @@
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
 import { getFirestore, collection, query, where, getDocs, doc, getDoc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-firestore.js";
-import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, setPersistence, browserLocalPersistence } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
+import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js";
 
-// ===== তোমার আসল Config - বসানো হয়ে গেছে =====
 const firebaseConfig = {
   apiKey: "AIzaSyArqUadtFApeblIJGaU5aPHASkcvrKNTJc",
   authDomain: "bd-job-85768.firebaseapp.com",
@@ -72,41 +71,39 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
-setPersistence(auth, browserLocalPersistence);
+signInAnonymously(auth).catch(()=>{});
 
-// ===== এখানে শুধু তোমার জিমেইলটা বসাও =====
-const ADMIN_EMAIL = "YOUR_ADMIN_EMAIL@gmail.com";
+// ===== তোমার Admin ফোন + পাসওয়ার্ড =====
+const ADMIN_PHONE = "01837976455";
+const ADMIN_PASS = "80418393";
 
 let currentTab = 'pending';
 let allUsers = [];
 
 window.adminLogin = async function(){
-  const email = document.getElementById('adminEmail').value.trim();
+  const phone = document.getElementById('adminPhone').value.trim();
   const pass = document.getElementById('adminPass').value.trim();
-  if(!email || !pass){ alert("ইমেইল + পাসওয়ার্ড দাও"); return; }
-  try{
-    await signInWithEmailAndPassword(auth, email, pass);
-  }catch(e){ document.getElementById('loginMsg').innerText = "ভুল ইমেইল / পাসওয়ার্ড: " + e.message; }
+  const cleanPhone = phone.replace("+880", "0").replace(/\s/g, "").replace(/-/g, "");
+  if(cleanPhone === ADMIN_PHONE && pass === ADMIN_PASS){
+    document.getElementById('loginBox').style.display = 'none';
+    document.getElementById('mainBox').style.display = 'block';
+    loadUsers();
+  } else {
+    document.getElementById('loginMsg').innerText = "ভুল ফোন নাম্বার বা পাসওয়ার্ড!";
+  }
 }
 
-onAuthStateChanged(auth, async (user)=>{
-  if(!user) return;
-  if(user.email !== ADMIN_EMAIL){
-    alert("তুমি এডমিন না! এই ইমেইল: " + user.email);
-    return;
-  }
-  document.getElementById('loginBox').style.display = 'none';
-  document.getElementById('mainBox').style.display = 'block';
-  loadUsers();
-});
-
 async function loadUsers(){
-  const snap = await getDocs(collection(db, "users"));
-  allUsers = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-  document.getElementById('totalUsers').innerText = allUsers.length;
-  document.getElementById('pendingCount').innerText = allUsers.filter(u => u.verifyStatus === "pending").length;
-  document.getElementById('verifiedCount').innerText = allUsers.filter(u => u.verifyStatus === "approved").length;
-  renderList();
+  try{
+    const snap = await getDocs(collection(db, "users"));
+    allUsers = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    document.getElementById('totalUsers').innerText = allUsers.length;
+    document.getElementById('pendingCount').innerText = allUsers.filter(u => u.verifyStatus === "pending").length;
+    document.getElementById('verifiedCount').innerText = allUsers.filter(u => u.verifyStatus === "approved").length;
+    renderList();
+  }catch(e){
+    document.getElementById('userList').innerHTML = '<div class="msg">এরর: ' + e.message + '<br><br>Firestore Rules এ read allow করতে হবে।</div>';
+  }
 }
 
 window.showTab = function(tab){
